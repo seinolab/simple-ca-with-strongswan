@@ -1,21 +1,21 @@
-= Simple CA with strongswan =
+# Simple CA with strongswan
 
 This Makefile makes easier to administrate your own ceritificate authority (CA).
 
 This CA is mainly useful to issue/revoke client certificates. 
 
-== Requirements
+## Requirements
 
 * strongswan
 * mailx
 
-== Preparation
+## Preparation
 
 Download this Makefile to your host.
 
 ```
 # mkdir -p "/etc/pki/${HOSTNAME}"
-# curl "https://github/..." -o "/etc/pki/${HOSTNAME}"
+# curl -sSL "https://raw.githubusercontent.com/seinolab/simple-ca-with-strongswan/main/Makefile" -o "/etc/pki/${HOSTNAME}/Makefile"
 ```
 
 Setup followings:
@@ -35,7 +35,7 @@ EXPIRE_CA=3660
 EXPIRE_CRL=7
 ```
 
-== Usage
+## Usage
 
 To create new CA, run this Makefile.
 
@@ -49,19 +49,19 @@ To destroy your CA, run the target clean.
 # make clean
 ```
 
-To issue new client certificate, run the target issue.
+To issue new client certificate, run the target issue. This example shows to issue a new client certificate for user `alice` and send it to `alice@example.com`.
 
 ```
 # make USER=alice MAILTO=alice@example.com issue
 ```
 
-To revoke a client certificate, run the target revoke.
+To revoke a client certificate, run the target revoke.  This example shows to revoke the cerificate for user `bob` with a reason `key-compromise`.
 
 ```
 # make USER=bob REASON=key-compromise revoke
 ```
 
-To update your certification revocation list (CRL), run the target update.
+To update your certification revocation list (CRL), run the target update.  Note that CRL is required to update periodically, even if you didn't revoke any user.
 
 ```
 # make update
