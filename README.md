@@ -14,8 +14,8 @@ This CA is mainly useful to issue and/or revoke client certificates.
 Download this Makefile to your host.
 
 ```
-# mkdir -p "/etc/pki/${HOSTNAME}"
-# curl -sSL "https://raw.githubusercontent.com/seinolab/simple-ca-with-strongswan/main/Makefile" -o "/etc/pki/${HOSTNAME}/Makefile"
+# mkdir -p "/etc/pki/myCA"
+# curl -sSL "https://raw.githubusercontent.com/seinolab/simple-ca-with-strongswan/main/Makefile" -o "/etc/pki/myCA/Makefile"
 ```
 
 Setup followings:
