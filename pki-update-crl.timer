@@ -1,0 +1,10 @@
+[Unit]
+Description=Update CRL periodically
+Wants=network-online.target
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
