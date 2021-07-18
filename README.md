@@ -1,8 +1,8 @@
 # Simple CA with strongswan
 
-This Makefile makes easier to administrate your own ceritificate authority (CA).
+This Makefile makes easier to administrate your own Certificate Authority (CA).
 
-This CA is mainly useful to issue/revoke client certificates. 
+This CA is mainly useful to issue and/or revoke client certificates. 
 
 ## Requirements
 
@@ -21,9 +21,9 @@ Download this Makefile to your host.
 Setup followings:
 
 ```
-CA_ROOT=/etc/pki/${HOSTNAME}
+CA_ROOT=/etc/pki/myCA
 
-# information of your certificate authority
+# information of your Certificate Authority
 COUNTRY=
 STATE=
 ORGANIZATION=
@@ -49,7 +49,7 @@ To destroy your CA, run the target clean.
 # make clean
 ```
 
-To issue new client certificate, run the target issue. This example shows to issue a new client certificate for user `alice` and send it to `alice@example.com`.
+To issue a new client certificate, run the target issue. This example shows to issue a new client certificate for user `alice` and send it to `alice@example.com` in .p12 format.
 
 ```
 # make USER=alice MAILTO=alice@example.com issue

@@ -1,6 +1,6 @@
-CA_ROOT=/etc/pki/${HOSTNAME}
+CA_ROOT=/etc/pki/myCA
 
-# information of your certificate authority
+# information of your Certificate Authority
 COUNTRY=
 STATE=
 ORGANIZATION=
@@ -9,7 +9,7 @@ CA_NAME=
 # lifetime of certificates
 EXPIRE_CERT=366
 EXPIRE_CA=3660
-EXPIRE_CRL=7
+EXPIRE_CRL=10
 
 # ------ end of configuration ----------------------------------------------
 
