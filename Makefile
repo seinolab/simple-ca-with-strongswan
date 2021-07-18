@@ -11,6 +11,9 @@ EXPIRE_CERT=366
 EXPIRE_CA=3660
 EXPIRE_CRL=10
 
+# default destination
+MAILTO=root
+
 # ------ end of configuration ----------------------------------------------
 
 # distingish names

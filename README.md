@@ -33,6 +33,9 @@ CA_NAME=
 EXPIRE_CERT=366
 EXPIRE_CA=3660
 EXPIRE_CRL=7
+
+# default destination
+MAILTO=root
 ```
 
 ## Usage
