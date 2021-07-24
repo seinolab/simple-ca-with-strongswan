@@ -8,4 +8,4 @@ Nice=19
 IOSchedulingClass=2
 IOSchedulingPriority=7
 ExecStart=/usr/bin/make update
-WorkingDirectory=/etc/pki/myca
+WorkingDirectory=/etc/pki/myCA
