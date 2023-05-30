@@ -1,15 +1,19 @@
 CA_ROOT=/etc/pki/myCA
 
 # information of your Certificate Authority
-COUNTRY=
-STATE=
-ORGANIZATION=
-CA_NAME=
+COUNTRY=JP
+STATE=Niigata
+ORGANIZATION=My Great Company
+CA_NAME=ca.example.com
 
 # lifetime of certificates
 EXPIRE_CERT=366
 EXPIRE_CA=3660
 EXPIRE_CRL=10
+
+# Type of certificates
+TYPE=ecdsa
+SIZE=256
 
 # default destination
 MAILTO=root
@@ -39,16 +43,17 @@ CKEY=${CLIENT_CERT_DIR}/${USER}.key.pem
 CPUB=${CLIENT_CERT_DIR}/${USER}.cert.pem
 issue: ${CA_PUB} ${CRL}
 	mkdir -p ${CLIENT_CERT_DIR}
-	strongswan pki --gen --type rsa --size 2048 --outform pem > ${CKEY}
+	strongswan pki --gen --type ${TYPE} --size ${SIZE} --outform pem > ${CKEY}
 	chmod 600 ${CKEY}
-	strongswan pki --pub --in ${CKEY} --type rsa \
+	strongswan pki --pub --in ${CKEY} --type ${TYPE} \
 	| strongswan pki --issue --lifetime ${EXPIRE_CERT} \
 	                 --cacert ${CA_PUB} --cakey ${CA_KEY} \
 	                 --dn "C=${COUNTRY}, O=${ORGANIZATION}, CN=${USER}" \
+	                 --flag clientAuth \
 	                 --san ${USER} --outform pem \
 	             > ${CPUB}
-	openssl pkcs12 -export -inkey ${CKEY} -in ${CPUB} \
-	               -certfile ${CA_PUB} -caname "${CA_NAME}" \
+	openssl pkcs12 -export -legacy \
+	               -inkey ${CKEY} -in ${CPUB} \
 	               -name "${ORGANIZATION} client certificate" \
 	               -out ${CLIENT_CERT_DIR}/${USER}.p12
 	echo | mail -a ${CLIENT_CERT_DIR}/${USER}.p12 \
@@ -70,6 +75,7 @@ revoke: ${CA_PUB} ${CRL}
 ## Usage: make update
 ##
 update: ${CA_PUB} ${CRL}
+update: ${CA_PUB} ${CRL}
 	strongswan pki --signcrl --lifetime=${EXPIRE_CRL} --basecrl=${CRL} \
 	               --cacert ${CA_PUB} --cakey ${CA_KEY} --outform pem \
 	           > ${CRL}.new \
@@ -82,9 +88,9 @@ SKEY=${SERVER_CERT_DIR}/${SERVER}.key.pem
 SPUB=${SERVER_CERT_DIR}/${SERVER}.cert.pem
 server: ${CA_PUB}
 	mkdir -p ${SERVER_CERT_DIR}
-	strongswan pki --gen --type rsa --size 2048 --outform pem > ${SKEY}
+	strongswan pki --gen --type ${TYPE} --size ${SIZE} --outform pem > ${SKEY}
 	chmod 600 ${SKEY}
-	strongswan pki --pub --in ${SKEY} --type rsa \
+	strongswan pki --pub --in ${SKEY} --type ${TYPE} \
 	| strongswan pki --issue --lifetime ${EXPIRE_CERT} \
 	                 --cacert ${CA_PUB} --cakey ${CA_KEY} \
 	                 --dn "C=${COUNTRY}, O=${ORGANIZATION}, CN=${SERVER}" \
@@ -104,12 +110,12 @@ ${CRL}: ${CA_PUB}
 ##
 ${CA_PUB}:
 	mkdir -p ${CA_CERT_DIR}
-	strongswan pki --gen --type rsa --size 4096 --outform pem > ${CA_KEY}
+	strongswan pki --gen --type ${TYPE} --size ${SIZE} --outform pem > ${CA_KEY}
 	chmod 600 ${CA_KEY}
 	strongswan pki --self --ca --lifetime ${EXPIRE_CA} \
-	               --in ${CA_KEY} --type rsa \
-	               --san ${CA_CERT_DN} \
- 	               --dn "${CA_CERT_DN}" --outform pem \
+	               --in ${CA_KEY} --type ${TYPE} \
+	               --san "${CA_CERT_DN}" \
+	               --dn "${CA_CERT_DN}" --outform pem \
 	           > ${CA_PUB}
 	openssl x509 -in ${CA_PUB} -outform DER -out ${CA_CERT_DIR}/root.cert.der
 	echo | mail -a ${CA_CERT_DIR}/root.cert.der \
@@ -126,4 +132,4 @@ clean:
 ## Usage: make help
 ##
 help:
-	grep '##' Makefile
+	sed -n -e 's/^## \?//p' Makefile
