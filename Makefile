@@ -116,6 +116,7 @@ ${CA_PUB}:
 	               --in ${CA_KEY} --type ${TYPE} \
 	               --san "${CA_CERT_DN}" \
 	               --dn "${CA_CERT_DN}" --outform pem \
+	               --flag crlSign \
 	           > ${CA_PUB}
 	openssl x509 -in ${CA_PUB} -outform DER -out ${CA_CERT_DIR}/root.cert.der
 	echo | mail -a ${CA_CERT_DIR}/root.cert.der \
